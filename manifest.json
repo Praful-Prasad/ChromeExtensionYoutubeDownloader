@@ -12,7 +12,11 @@
             "js":["src/loader.js"],
             "css":["src/swaggify.css"]
         }
-    ]
+    ],
+    "permissions":["downloads"],
+    "background":{
+        "scripts":["src/background.js"]
+    }
 }
 
 

@@ -10,8 +10,19 @@ function downloadVideo(){
     else{
         dl.className+="shown";
     }
-
     console.log("Downloadedddd this video");
+}
+
+
+function downloadURI(event){
+    event.preventDefault();
+    event.stopPropagation();
+    var url = event.currentTarget.getAttribute("href");
+    var name = document.getElementsByTagName("title")[0].innerText;
+    var datatype = event.currentTarget.getAttribute("data-type");
+    var data = {url:url,name: name, sender:"YTDL",type:datatype};
+    window.postMessage(data,"*");
+    return false
 }
 // var videoUrls = {};
 // ytplayer.config.args.url_encoded_fmt_stream_map.split(',').forEach(function (item) {
@@ -54,9 +65,10 @@ function downloadVideo(){
     var videoUrls = window.ytplayer.config.args.player_response;
 
 
-    console.log("Our extension hassssssss loaded",videoUrls)
+    console.log("Our extension hassssssss loaded",JSON.parse(videoUrls).streamingData.adaptiveFormats);
 
     var container = document.getElementById("top-level-buttons");
+
     var btn = document.createElement("button");
     btn.className = "style-scope ytd-menu-renderer force-icon-button style-text";
     btn.setAttribute("role","button");
@@ -72,16 +84,31 @@ function downloadVideo(){
 
     container.appendChild(btn);
     console.log("video urls right here right now = ");
-    for(i in videoUrls){
-        var item = document.createElement("li");
-        console.log("here 1");
-        item.innerText = videoUrls[i];
-        console.log("here 2");
-        item.setAttribute("href",videoUrls[i]["video/mp4"]["url"]);
-        console.log("here 3");
-        dropList.appendChild(item);
-        console.log("here 4");
+    var quality = [];
+    var flag =0;
+    for(i in JSON.parse(videoUrls).streamingData.adaptiveFormats)
+    {
+        for(j=0;j<quality.length;j++)
+          if(JSON.parse(videoUrls).streamingData.adaptiveFormats[i]["quality"]==quality[j])
+            flag=1;
+    
+    
+        if(flag==0)
+        {   quality.push(JSON.parse(videoUrls).streamingData.adaptiveFormats[i]["quality"]);
+            var item = document.createElement("a");
+            item.innerText = JSON.parse(videoUrls).streamingData.adaptiveFormats[i]["quality"];
+            item.setAttribute("href",JSON.parse(videoUrls).streamingData.adaptiveFormats[i]["url"]);
+            item.setAttribute("target","_blank");
+            item.setAttribute("data-type",JSON.parse(videoUrls).streamingData.adaptiveFormats[i]["mimeType"]);
+            item.addEventListener("click",downloadURI);
+
+            dropList.appendChild(item);
+        }
+        flag=0;   
     }
+
+
+
     console.log("skipped for loop");
     btn.addEventListener("click",downloadVideo)
 
