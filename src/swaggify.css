@@ -4,7 +4,6 @@
 position: absolute;
 border: 1px solid #ddd;
 width: 200px;
-height: 100px;
 background: #fff;
 z-index: 99999;
 box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
@@ -16,4 +15,15 @@ display:none;
 
 #VideoDownloadDropdown.shown{
     display: block;
+}
+
+#VideoDownloadDropdown a{
+    display: block;
+    padding: 10px;
+    color: #444;
+
+}
+
+#VideoDownloadDropdown a:hover{
+    background: grey ;
 }
